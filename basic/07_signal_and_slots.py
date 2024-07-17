@@ -5,6 +5,7 @@ import sys
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 
+
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
@@ -34,5 +35,4 @@ window = MainWindow()
 window.show()
 
 # Start the event loop
-app.exec_()
-
+app.exec()
