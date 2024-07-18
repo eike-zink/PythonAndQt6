@@ -21,5 +21,5 @@ window = MainWindow()
 window.show()
 
 # Start the event loop
-app.exec_()
+app.exec()
 
