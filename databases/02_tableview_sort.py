@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtSql import QSqlDatabase, QSqlTableModel
+from PySide6.QtSql import QSqlDatabase, QSqlRelationalTableModel, QSqlRelation
 from PySide6.QtWidgets import QApplication, QMainWindow, QTableView
 
 
@@ -14,15 +14,22 @@ class MainWindow(QMainWindow):
         self.db.open()
 
         self.table = QTableView()
-        self.model = QSqlTableModel(db=self.db)
+        # self.model = QSqlTableModel(db=self.db)
+        self.model = QSqlRelationalTableModel(db=self.db)
         self.table.setModel(self.model)
 
         self.model.setTable("Track")
+        # Headers
         self.model.setHeaderData(1, Qt.Orientation.Horizontal, 'Name')
         self.model.setHeaderData(2, Qt.Orientation.Horizontal, 'Album (ID)')
         self.model.setHeaderData(3, Qt.Orientation.Horizontal, 'Media Type (ID)')
         self.model.setHeaderData(4, Qt.Orientation.Horizontal, 'Genre (ID)')
         self.model.setHeaderData(5, Qt.Orientation.Horizontal, 'Composer')
+        # Relations
+        self.model.setRelation(2, QSqlRelation('Album', 'AlbumId', 'Title'))
+        self.model.setRelation(3, QSqlRelation('MediaType', 'MediaTypeId', 'Name'))
+        self.model.setRelation(4, QSqlRelation('Genre', 'GenreId', 'Name'))
+        # Sorting by Index or by Name
         # self.model.setSort(2, Qt.SortOrder.DescendingOrder)
         idx = self.model.fieldIndex('Milliseconds')
         self.model.setSort(idx, Qt.SortOrder.DescendingOrder)
