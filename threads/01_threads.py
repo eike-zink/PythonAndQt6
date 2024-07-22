@@ -32,7 +32,9 @@ class MainWindow(QMainWindow):
         self.timer.start()
 
     def oh_no(self):
-        time.sleep(5)
+        for _ in range(5):
+            QApplication.processEvents()
+            time.sleep(1)
 
     def recurring_timer(self):
         self.counter += 1
