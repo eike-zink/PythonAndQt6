@@ -30,24 +30,35 @@ class _Bar(QtWidgets.QWidget):
         painter.fillRect(rect, brush)
 
         # Get current state
-        dial = self.parent()._dial
-        vmin, vmax = dial.minimum(), dial.maximum()
-        value = dial.value()
+        dial = self.parent().dial
+        vmin, vmax, value = dial.minimum(), dial.maximum(), dial.value()
 
-        pen = painter.pen()
-        pen.setColor(QtGui.QColor("red"))
-        painter.setPen(pen)
+        # Define our canvas
+        padding = 5
+        d_height = painter.device().height() - (padding * 2)
+        d_width = painter.device().width() - (padding * 2)
 
-        font = painter.font()
-        font.setFamily("Courier")
-        font.setPointSize(18)
-        painter.setFont(font)
+        # Draw the bars
+        step_size = int(d_height / 5)
+        bar_height = int(step_size * 0.6)
+        bar_spacer = int(step_size * 0.4 / 2)
 
-        painter.drawText(25, 25, "{}->{}->{}".format(vmin, value, vmax))
+        pc = (value - vmin) / (vmax - vmin)
+        steps_to_draw = int(pc * 5)
+        brush.setColor(QtGui.QColor("red"))
+        for n in range(steps_to_draw):
+            rect = QtCore.QRect(
+                padding,
+                int(padding + d_height - ((n + 1) * step_size) + bar_spacer),
+                d_width,
+                bar_height
+            )
+            painter.fillRect(rect, brush)
         painter.end()
 
-    def _trigger_refresh(self):
+    def trigger_refresh(self):
         self.update()
+
 
 class PowerBar(QtWidgets.QWidget):
     """
@@ -61,8 +72,8 @@ class PowerBar(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self._bar)
 
-        self._dial = QtWidgets.QDial()
-        layout.addWidget(self._dial)
-        self._dial.valueChanged.connect(self._bar._trigger_refresh)
+        self.dial = QtWidgets.QDial()
+        layout.addWidget(self.dial)
+        self.dial.valueChanged.connect(self._bar.trigger_refresh)
 
         self.setLayout(layout)
