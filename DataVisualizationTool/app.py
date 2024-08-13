@@ -1,7 +1,12 @@
 import argparse
+import sys
+
 import pandas as pd
 
 from PySide6.QtCore import  QDateTime, QTimeZone
+from PySide6.QtWidgets import QApplication
+
+from main_window import MainWindow
 
 
 def transform_date(utc, timezone=None):
@@ -29,4 +34,10 @@ if __name__ == '__main__':
     options.add_argument('-f', '--file', type=str, required=True, help="Name of the CSV-file")
     args = options.parse_args()
     data = read_date(args.file)
-    print(data)
+
+    app = QApplication(sys.argv)
+
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
+
