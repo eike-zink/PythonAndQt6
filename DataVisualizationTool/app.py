@@ -3,19 +3,22 @@ import sys
 
 import pandas as pd
 
-from PySide6.QtCore import  QDateTime, QTimeZone
+from PySide6.QtCore import QDateTime, QTimeZone
 from PySide6.QtWidgets import QApplication
 
 from main_window import MainWindow
+from main_widget import MainWidget
 
 
 def transform_date(utc, timezone=None):
     """Transform String to UTC-Date"""
     utc_fmt = 'yyyy-MM-ddTHH:mm:ss.zzzZ'
-    new_date =QDateTime().fromString(utc, utc_fmt)
+    new_date = QDateTime().fromString(utc, utc_fmt)
     if timezone:
         new_date.setTimeZone(timezone)
     return new_date
+
+
 def read_date(file_name):
     # Read the CSV content
     df = pd.read_csv(file_name)
@@ -31,13 +34,14 @@ def read_date(file_name):
 
 if __name__ == '__main__':
     options = argparse.ArgumentParser()
-    options.add_argument('-f', '--file', type=str, required=True, help="Name of the CSV-file")
+    options.add_argument('-f', '--file', type=str, required=False, help="Name of the CSV-file")
     args = options.parse_args()
-    data = read_date(args.file)
+    # TODO data = read_date(args.file)
+    data = read_date('all_day.csv')
 
     app = QApplication(sys.argv)
 
-    window = MainWindow()
+    widget = MainWidget(data)
+    window = MainWindow(widget)
     window.show()
     sys.exit(app.exec())
-

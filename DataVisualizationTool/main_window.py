@@ -4,9 +4,10 @@ from PySide6.QtWidgets import QMainWindow
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, widget=None):
         QMainWindow.__init__(self)
         self.setWindowTitle("Eartquarks information")
+        self.setCentralWidget(widget)
 
         # Menu
         self.menu = self.menuBar()
