@@ -16,6 +16,7 @@ def transform_date(utc, timezone=None):
     if timezone:
         new_date.setTimeZone(timezone)
     return new_date
+
 def read_date(file_name):
     # Read the CSV content
     df = pd.read_csv(file_name)
