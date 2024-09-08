@@ -40,7 +40,6 @@ def main():
             ))
             show_notification("Farbe ausgewählt", f"HSV-Wert: {color.hue()}, {color.saturation()}, {color.value()}")
 
-
     # Lade das Icon mit vollständigem Pfad
     icon_path = os.path.abspath('img/app.png')
     print(icon_path)
@@ -80,9 +79,10 @@ def main():
     tray.setContextMenu(menu)
 
     # Zeige das Tray-Icon an
-    #tray.show()
+    # tray.show()
 
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
