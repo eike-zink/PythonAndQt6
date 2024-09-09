@@ -1,4 +1,5 @@
 import sys
+import sqlite3
 
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QTableView, QLineEdit, QVBoxLayout
 from PySide6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel
@@ -17,25 +18,28 @@ class TableModel(QAbstractTableModel):
         return len(self._data)
 
     def columnCount(self, index):
-        return len(self._data[0])
-    
+        return len(self._data[0]) if self._data else 0
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        data = [
-            [4, 9, 2],
-            [1, 'hello', 0],
-            [3, 5, 0],
-            [3, 3, 'hello'],
-            ['hello', 8, 9],
-        ]
+        # SQLite Verbindung herstellen
+        connection = sqlite3.connect('books.db')
+        cursor = connection.cursor()
+
+        # Daten aus der SQLite Daten einlesen
+        cursor.execute('select * from books')
+        data = cursor.fetchall()
+
+        # SQLite Verbindung schliessen
+        connection.close()
 
         self.model = TableModel(data)
         self.proxy_model = QSortFilterProxyModel()
         self.proxy_model.setSourceModel(self.model)
-        self.proxy_model.setFilterKeyColumn(-1) # Search in all columns
+        self.proxy_model.setFilterKeyColumn(-1)  # Search in all columns
         self.proxy_model.sort(0, Qt.AscendingOrder)
 
         self.table = QTableView()
@@ -50,7 +54,7 @@ class MainWindow(QMainWindow):
 
         container = QWidget()
         container.setLayout(layout)
-        
+
         self.setCentralWidget(container)
 
 
@@ -58,5 +62,3 @@ app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
 app.exec()
-
-
